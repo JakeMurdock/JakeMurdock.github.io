@@ -1,33 +1,35 @@
-// JavaScript for slider functionality
-const sliders = document.querySelectorAll('.container');
+const year = new Date().getFullYear();
+const thirdOfJuly = new Date(year, 6, 3).getTime();
+const thirdOfJulyNextYear = new Date(year + 1, 6, 3).getTime();
+const month = new Date().getMonth();
 
-sliders.forEach(slider => {
-  let isDown = false;
-  let startX;
-  let scrollLeft;
+// countdown
+let timer = setInterval(function() {
+  // get today's date
+  const today = new Date().getTime();
 
-  slider.addEventListener('mousedown', (e) => {
-    isDown = true;
-    slider.classList.add('active');
-    startX = e.pageX - slider.offsetLeft;
-    scrollLeft = slider.scrollLeft;
-  });
+  // get the difference
+  let diff;
+  if(month > 6) {
+    diff = thirdOfJulyNextYear - today;
+  } else {
+    diff = thirdOfJuly - today;
+  }
 
-  slider.addEventListener('mouseleave', () => {
-    isDown = false;
-    slider.classList.remove('active');
-  });
+  // math
+  let days = Math.floor(diff / (1000 * 60 * 60 * 24));
+  let hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  let minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+  let seconds = Math.floor((diff % (1000 * 60)) / 1000);
 
-  slider.addEventListener('mouseup', () => {
-    isDown = false;
-    slider.classList.remove('active');
-  });
-
-  slider.addEventListener('mousemove', (e) => {
-    if (!isDown) return;
-    e.preventDefault();
-    const x = e.pageX - slider.offsetLeft;
-    const walk = (x - startX) * 3; // Adjust the multiplier to control scrolling speed
-    slider.scrollLeft = scrollLeft - walk;
-  });
-});
+  // display
+  document.getElementById("timer").innerHTML = "<div class=\"days\"> \
+  <div class=\"numbers\">" + days + "</div>days</div> \
+  <div class=\"hours\"> \
+  <div class=\"numbers\">" + hours + "</div>hours</div> \
+  <div class=\"minutes\"> \
+  <div class=\"numbers\">" + minutes + "</div>minutes</div> \
+  <div class=\"seconds\"> \
+  <div class=\"numbers\">" + seconds + "</div>seconds</div> \
+  </div>";
+}, 1000);
